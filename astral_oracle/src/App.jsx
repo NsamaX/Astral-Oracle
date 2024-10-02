@@ -143,12 +143,6 @@ function App() {
   
   return (
     <>
-      {showCookieConsent && (
-        <CookieConsent 
-          onAccept={handleCookieAccept} 
-          onDecline={handleCookieDecline} 
-        />
-      )}
       <header className='header'>
         <h1>Astral Oracle</h1>
         <div className='icon-history' onClick={() => setShowHistory(prev => !prev)}>
@@ -169,10 +163,12 @@ function App() {
               return (
                 <img 
                   key={index}
-                  className={`card-image ${displayCard.isReversed ? 'rev' : ''} ${index > 0 ? 'stacked' : ''}`} 
+                  className={`card-image ${index > 0 ? 'stacked' : ''}`} 
                   src={displayCard.image} 
                   alt={displayCard.name} 
-                  style={{ transform: `rotate(${displayCard.rotation}deg)` }}
+                  style={{ 
+                    transform: `rotate(${displayCard.rotation}deg) scale(${displayCard.isReversed ? -1 : 1})`,
+                  }}
                   onClick={handleCardClick}
                 />
               );
@@ -187,7 +183,7 @@ function App() {
             <h3>Please pick a card.</h3>
           )}
           {loading ? (
-            <h3>Loading...</h3>
+            <h3>Shuffling cards...</h3>
           ) : (
             cards.length > 0 && (
               <h3>{cards[0].name}</h3>
@@ -205,12 +201,43 @@ function App() {
               </button>
             ))}
           </div>
+          
+          {cards.length > 0 && (
+            <div className='input-container'>
+              <input
+                className='ask-the-oracle'
+                type='text'
+                value={userInput}
+                onChange={e => setUserInput(e.target.value)}
+                placeholder="What is on your mind, dear seeker?"
+                style={{ paddingRight: userInput ? '46px' : '0' }}
+              />
+              {userInput && (
+                <div className='icon-lightbul-on' onClick={() => { 
+                    fetchGroqAI();
+                    setUserInput(''); 
+                }}>
+                  <img src={icon_lightbul_on} alt="Ask" />
+                </div>
+              )}
+            </div>
+          )}
+          
+          {loading && <p>The oracle is connecting with the cosmic energies...</p>}
+          {groqResponse && <p>{groqResponse}</p>}
         </section>
         
         <section className='right-side'>
           {cards.length === 0 && !loading ? (
             <>
-              <h2>Welcome to Astral Oracle</h2>
+              <h2>✨Greetings Traveler!✨</h2>
+              {showCookieConsent && (
+                <CookieConsent 
+                  onAccept={handleCookieAccept} 
+                  onDecline={handleCookieDecline} 
+                />
+              )}
+              
               <p>Discover cosmic insights and wisdom hidden within the stars. Astral Oracle is your gateway to daily tarot readings, offering profound guidance on love, career, and personal growth. Connect with the universe and unveil deeper meanings behind life events.</p>
               <p>Pick a card, or explore multi-card spreads to dive deeper into the mysteries shaping your path. Whether it's a single card or a five-card reading, we deliver personalized messages to illuminate your journey.</p>
               <p>Embrace the power of the tarot and let the stars guide you toward the answers you seek. Gain clarity, insight, and confidence to face the future.</p>
@@ -229,27 +256,6 @@ function App() {
               ))
             )
           )}
-          
-          {cards.length > 0 && (
-            <div className='input-container'>
-              <input
-                className='ask-the-oracle'
-                type='text'
-                value={userInput}
-                onChange={e => setUserInput(e.target.value)}
-                placeholder='What is on your mind, dear seeker?'
-              />
-              <div className='icon-lightbul-on' onClick={() => { 
-                  fetchGroqAI();
-                  setUserInput(''); 
-              }}>
-                <img src={icon_lightbul_on} alt="Ask" />
-              </div>
-            </div>
-          )}
-          
-          {loading && <p>The oracle is connecting with the cosmic energies...</p>}
-          {groqResponse && <p>{groqResponse}</p>}
         </section>
       </main>
 

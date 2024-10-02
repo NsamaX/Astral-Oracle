@@ -8,6 +8,7 @@ import HistorySidebar from './component/history';
 import CookieConsent from './component/cookie';
 import './css/App.css';
 
+// Set up Groq API key
 const apiKey = import.meta.env.VITE_GROQ_API_KEY;
 const groq = new Groq({ apiKey: apiKey, dangerouslyAllowBrowser: true });
 

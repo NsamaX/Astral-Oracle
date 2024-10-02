@@ -8,7 +8,6 @@ import HistorySidebar from './component/history';
 import CookieConsent from './component/cookie';
 import './css/App.css';
 
-// Set up Groq API key
 const apiKey = import.meta.env.VITE_GROQ_API_KEY;
 const groq = new Groq({ apiKey: apiKey, dangerouslyAllowBrowser: true });
 
@@ -51,12 +50,14 @@ function App() {
       const response = await fetch(`https://tarotapi.dev/api/v1/cards/random?n=${numCards}`);
       const data = await response.json();
       const cardsWithOrientation = data.cards.map((card, index) => {
+        const image = getCardImage(card.name_short);
         const isReversed = Math.random() > 0.5;
         const randomRotation = index > 0 ? Math.floor(Math.random() * 20) - 5 : 0;
-        return { ...card, isReversed, rotation: randomRotation };
+        return { ...card, image, isReversed, rotation: randomRotation };
       });
   
       setCards(cardsWithOrientation);
+      console.log(cardsWithOrientation);
   
       cardsWithOrientation.forEach(card => {
         const cardData = {
@@ -143,20 +144,26 @@ function App() {
       <main className='body'>
         <section className='left-side'>
           <div className="card-container">
-            {cards.length > 0 && cards[0] ? (
-              cards.map((card, index) => (
+          {cards.length > 0 ? (
+            cards.map((card, index) => {
+              const displayCardIndex = (index + 1) % cards.length; 
+              const displayCard = cards[displayCardIndex];
+              
+              return (
                 <img 
                   key={index}
-                  className={`card-image ${card.isReversed ? 'rev' : ''} ${index > 0 ? 'stacked' : ''}`} 
-                  src={getCardImage(card.name_short)} 
-                  alt={card.name} 
-                  style={{ transform: `rotate(${card.rotation}deg)` }}
+                  className={`card-image ${displayCard.isReversed ? 'rev' : ''} ${index > 0 ? 'stacked' : ''}`} 
+                  src={displayCard.image} 
+                  alt={displayCard.name} 
+                  style={{ transform: `rotate(${displayCard.rotation}deg)` }}
                   onClick={handleCardClick}
                 />
-              ))
-            ) : (
-              <img className='card-image' src={image_icon} alt="card image" />
-            )}
+              );
+            })
+          ) : (
+            <img className='card-image' src={image_icon} alt="card image" />
+          )}
+
           </div>
           
           {cards.length === 0 && !loading && (
@@ -193,18 +200,16 @@ function App() {
             </>
           ) : (
             cards.length > 0 && (
-              <>
-                {cards.map((card, index) => (
-                  <div key={index}>
-                    <p><strong>Name:</strong> {card.name}</p>
-                    <p>
-                      <strong>{card.isReversed ? 'Reversed' : 'Upright'} Meaning:</strong> 
-                      {card.isReversed ? card.meaning_rev : card.meaning_up}
-                    </p>
-                    <p><strong>Description:</strong> {card.desc}</p>
-                  </div>
-                ))}
-              </>
+              cards.map((card, index) => (
+                <div key={index}>
+                  <p><strong>Name:</strong> {card.name}</p>
+                  <p>
+                    <strong>{card.isReversed ? 'Reversed' : 'Upright'} Meaning: </strong> 
+                    {card.isReversed ? card.meaning_rev : card.meaning_up}
+                  </p>
+                  <p><strong>Description:</strong> {card.desc}</p>
+                </div>
+              ))
             )
           )}
           

@@ -193,21 +193,20 @@ function App() {
           ) : (
             cards.length > 0 && (
               <>
-{cards.map((card, index) => (
-  <div key={index}>
-    {prevCards.name === card.name ? (  // ตรวจสอบว่า prevCards.name ตรงกับชื่อการ์ดหรือไม่
-      <h3>{card.name}</h3>  // แสดงชื่อการ์ดถ้าตรงกัน
-    ) : (  
-      <p><strong>Name:</strong> {card.name}</p>  // แสดงชื่อการ์ดถ้าไม่ตรงกัน
-    )}
-    <p>
-      <strong>{card.isReversed ? 'Reversed' : 'Upright'} Meaning:</strong> 
-      {card.isReversed ? card.meaning_rev : card.meaning_up}
-    </p>
-    <p><strong>Description:</strong> {card.desc}</p>
-  </div>
-))}
-
+                {cards.map((card, index) => (
+                  <div key={index}>
+                    {prevCards.name === card.name ? (
+                      <h3>{card.name}</h3>
+                    ) : (  
+                      <p><strong>Name:</strong> {card.name}</p>
+                    )}
+                    <p>
+                      <strong>{card.isReversed ? 'Reversed' : 'Upright'} Meaning:</strong> 
+                      {card.isReversed ? card.meaning_rev : card.meaning_up}
+                    </p>
+                    <p><strong>Description:</strong> {card.desc}</p>
+                  </div>
+                ))}
               </>
             )
           )}

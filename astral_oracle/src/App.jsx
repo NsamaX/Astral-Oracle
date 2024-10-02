@@ -4,7 +4,6 @@ import cardData from './card_data.json';
 import image_icon from './assets/card.png';
 import icon_history from './assets/icon_history.png';
 import icon_lightbul_on from './assets/icon_lightbul_on.png';
-import icon_cards from './assets/icon_cards.png';
 import HistorySidebar from './component/history';
 import CookieConsent from './component/cookie';
 import './css/App.css';

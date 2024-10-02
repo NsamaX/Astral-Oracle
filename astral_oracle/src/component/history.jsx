@@ -29,14 +29,16 @@ const HistorySidebar = ({ showHistory, onClose }) => {
       <h1>History</h1>
       {cardHistory.length > 0 ? (
         cardHistory.map((entry, index) => (
-          <div key={index} className='history'>
-            <div className='card'>
-              <img src={image_icon} alt="card" />
-            </div>
-            <div className='card-info'>
-              <p>Date: {entry.date}</p>
-              <p>Time: {entry.time}</p>
-              <p>Card: {entry.card}</p>
+          <div key={index} className='history-container'>
+            <div className='history'>
+              <div className='card'>
+                <img src={image_icon} alt="card" />
+              </div>
+              <div className='card-info'>
+                <p>Date: {entry.date}</p>
+                <p>Time: {entry.time}</p>
+                <p>Card: {entry.card}</p>
+              </div>
             </div>
             <hr />
           </div>

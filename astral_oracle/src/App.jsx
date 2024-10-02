@@ -1,21 +1,48 @@
-import { useState } from 'react';
-import cardData from './card_data.json';
+import React, { useEffect, useState } from 'react';
 import Groq from 'groq-sdk';
+import cardData from './card_data.json';
 import image_icon from './assets/card.png';
 import icon_history from './assets/icon_history.png';
 import icon_lightbul_on from './assets/icon_lightbul_on.png';
 import HistorySidebar from './component/history';
+import CookieConsent from './component/cookie';
 import './css/App.css';
 
-const apiKey = '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';
+const apiKey = import.meta.env.VITE_GROQ_API_KEY;
 const groq = new Groq({ apiKey: apiKey, dangerouslyAllowBrowser: true });
 
 function App() {
-  const [showHistory, setShowHistory] = useState(false); 
-  const [userInput, setUserInput] = useState('');
+  const [showCookieConsent, setShowCookieConsent] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
   const [cards, setCards] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); 
+  const [userInput, setUserInput] = useState('');
   const [groqResponse, setGroqResponse] = useState('');
+
+  useEffect(() => {
+    const consent = localStorage.getItem('cookieConsent');
+    if (!consent) {
+      setShowCookieConsent(true);
+    }
+  }, []);
+
+  const handleCookieDecline = () => {
+    setShowCookieConsent(false);
+  };
+
+  const handleCookieAccept = () => {
+    localStorage.setItem('cookieConsent', 'true');
+    setShowCookieConsent(false);
+  };
+
+  const saveCardToHistory = (cardData) => {
+    const consent = localStorage.getItem('cookieConsent');
+    if (consent === 'true') {
+      let history = JSON.parse(localStorage.getItem('cardHistory')) || [];
+      history.push(cardData);
+      localStorage.setItem('cardHistory', JSON.stringify(history));
+    }
+  };
 
   const fetchCards = async (numCards) => {
     setLoading(true);
@@ -27,9 +54,17 @@ function App() {
         const randomRotation = index > 0 ? Math.floor(Math.random() * 20) - 5 : 0;
         return { ...card, isReversed, rotation: randomRotation };
       });
-      
-      console.log(cardsWithOrientation);
+  
       setCards(cardsWithOrientation);
+  
+      cardsWithOrientation.forEach(card => {
+        const cardData = {
+          date: new Date().toLocaleDateString(),
+          time: new Date().toLocaleTimeString(),
+          card: card.name,
+        };
+        saveCardToHistory(cardData);
+      });
   
       setGroqResponse('');
     } catch (error) {
@@ -37,7 +72,7 @@ function App() {
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   const getCardImage = (nameShort) => {
     const cardInfo = cardData.cards.find(card => card.name_short === nameShort); 
@@ -89,6 +124,12 @@ function App() {
   
   return (
     <>
+      {showCookieConsent && (
+        <CookieConsent 
+          onAccept={handleCookieAccept} 
+          onDecline={handleCookieDecline} 
+        />
+      )}
       <header className='header'>
         <h1>Astral Oracle</h1>
         <div className='icon-history' onClick={() => setShowHistory(prev => !prev)}>
@@ -152,15 +193,21 @@ function App() {
           ) : (
             cards.length > 0 && (
               <>
-                {cards.map((card, index) => (
-                  <div key={index}>
-                    <p><strong>Name:</strong> {card.name}</p>
-                    <p>
-                      <strong>{card.isReversed ? 'Reversed' : 'Upright'} Meaning:</strong> {card.isReversed ? card.meaning_rev : card.meaning_up}
-                    </p>
-                    <p><strong>Description:</strong> {card.desc}</p>
-                  </div>
-                ))}
+{cards.map((card, index) => (
+  <div key={index}>
+    {prevCards.name === card.name ? (  // ตรวจสอบว่า prevCards.name ตรงกับชื่อการ์ดหรือไม่
+      <h3>{card.name}</h3>  // แสดงชื่อการ์ดถ้าตรงกัน
+    ) : (  
+      <p><strong>Name:</strong> {card.name}</p>  // แสดงชื่อการ์ดถ้าไม่ตรงกัน
+    )}
+    <p>
+      <strong>{card.isReversed ? 'Reversed' : 'Upright'} Meaning:</strong> 
+      {card.isReversed ? card.meaning_rev : card.meaning_up}
+    </p>
+    <p><strong>Description:</strong> {card.desc}</p>
+  </div>
+))}
+
               </>
             )
           )}

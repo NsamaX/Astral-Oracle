@@ -20,10 +20,7 @@ function App() {
   const [groqResponse, setGroqResponse] = useState('');
 
   useEffect(() => {
-    const consent = localStorage.getItem('cookieConsent');
-    if (!consent) {
-      setShowCookieConsent(true);
-    }
+    setShowCookieConsent(true); 
   }, []);
 
   const setCookie = (name, value, days) => {
@@ -40,8 +37,9 @@ function App() {
 
   const handleCookieDecline = () => {
     setShowCookieConsent(false);
-    setCookie('cookieConsent', 'false', 365);
-  };
+    Cookies.remove('cookieConsent');
+    Cookies.remove('cardHistory');
+  };  
 
   const handleCookieAccept = () => {
     localStorage.setItem('cookieConsent', 'true');
@@ -53,7 +51,12 @@ function App() {
     const consent = getCookie('cookieConsent');
     if (consent === 'true') {
       let history = JSON.parse(getCookie('cardHistory') || '[]');
-      history.push(cardData);
+      history.push({
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString(),
+        card: cardData.name,
+        image: cardData.image
+      });
       setCookie('cardHistory', JSON.stringify(history), 365);
     }
   };

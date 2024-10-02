@@ -32,7 +32,7 @@ const HistorySidebar = ({ showHistory, onClose }) => {
           <div key={index} className='history-container'>
             <div className='history'>
               <div className='card'>
-                <img src={image_icon} alt="card" />
+                <img src={entry.image || image_icon} alt="card" />
               </div>
               <div className='card-info'>
                 <p>Date: {entry.date}</p>
@@ -46,6 +46,7 @@ const HistorySidebar = ({ showHistory, onClose }) => {
       ) : (
         <p>No history available.</p>
       )}
+      <br />
     </div>
   );
 };

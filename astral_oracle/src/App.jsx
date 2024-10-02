@@ -85,10 +85,16 @@ function App() {
               <p>Embrace the power of the tarot and let the stars guide you toward the answers you seek. Gain clarity, insight, and confidence to face the future.</p>
             </>
           ) : (
-            cards.length > 0 && cards[0] && (
+            cards.length > 0 && (
               <>
-                <p><strong>Upright Meaning:</strong> {cards[0].isReversed ? cards[0].meaning_rev : cards[0].meaning_up}</p>
-                <p><strong>Description:</strong> {cards[0].desc}</p>
+                {cards.map((card, index) => (
+                  <div key={index}>
+                    <p>
+                      <strong>{card.isReversed ? 'Reversed' : 'Upright'} Meaning:</strong> {card.isReversed ? card.meaning_rev : card.meaning_up}
+                    </p>
+                    <p><strong>Description:</strong> {card.desc}</p>
+                  </div>
+                ))}
               </>
             )
           )}

@@ -50,8 +50,20 @@
     gap: 26px;
 }
 
+.card-container {
+    position: relative;
+}
+
 .card-image {
     max-width: 230px;
+    transition: transform 0.4s;
+}
+
+.card-image.stacked {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .card-image.rev {

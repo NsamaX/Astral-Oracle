@@ -85,9 +85,15 @@
     text-align: center;
 }
 
+/* .input-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+} */
 .input-container {
     display: flex;
     align-items: center;
+    position: relative;
     width: 100%;
 }
 
@@ -97,34 +103,29 @@
     height: 40px;
     font-size: 1.3rem;
     background: transparent;
-    border: 3px solid #BE97CC;
-    border-right: none;
-    border-radius: 16px 0 0 16px;
+    border: 3px solid #97C7CC;
+    border-radius: 16px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: border-color 0.3s ease;
+}
+
+.ask-the-oracle:focus {
+    outline: none;
+    border-color: #BE97CC;
 }
 
 .icon-lightbul-on {
     display: flex;
     align-items: center;
-    justify-content: center;
+    position: absolute;
+    right: 0;
     padding-right: 16px;
-    width: 40px;
-    height: 40px;
-    border-radius: 0 16px 16px 0;
-    border: 3px solid #BE97CC;
-    border-left: none;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .icon-lightbul-on img {
     width: 26px;
     height: 26px;
     cursor: pointer;
-}
-
-.ask-the-oracle:focus {
-    outline: none;
 }
 
 .footer {

@@ -4,6 +4,7 @@ import cardData from './card_data.json';
 import image_icon from './assets/card.png';
 import icon_history from './assets/icon_history.png';
 import icon_lightbul_on from './assets/icon_lightbul_on.png';
+import icon_cards from './assets/icon_cards.png';
 import HistorySidebar from './component/history';
 import CookieConsent from './component/cookie';
 import './css/App.css';
@@ -20,9 +21,19 @@ function App() {
   const [groqResponse, setGroqResponse] = useState('');
 
   useEffect(() => {
+    document.title = "Astral Oracle";
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.href = icon_cards;
+    document.head.appendChild(link);
+
     const consent = localStorage.getItem('cookieConsent');
     if (!consent) {
       setShowCookieConsent(true);
+    }
+
+    return () => {
+      document.head.removeChild(link);
     }
   }, []);
 

@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import cardData from './card_data.json';
 import Groq from 'groq-sdk';
 import image_icon from './assets/card.png';
 import icon_history from './assets/icon_history.png';
@@ -36,6 +37,11 @@ function App() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const getCardImage = (nameShort) => {
+    const cardInfo = cardData.cards.find(card => card.name_short === nameShort); 
+    return cardInfo ? cardInfo.image : image_icon; 
   };
   
   const fetchGroqAI = async () => {
@@ -87,11 +93,11 @@ function App() {
             {cards.length > 0 && cards[0] ? (
               cards.map((card, index) => (
                 <img 
-                    key={index}
-                    className={`card-image ${card.isReversed ? 'rev' : ''} ${index > 0 ? 'stacked' : ''}`} 
-                    src={image_icon} 
-                    alt="card image" 
-                    style={{ transform: `rotate(${card.rotation}deg)` }}
+                  key={index}
+                  className={`card-image ${card.isReversed ? 'rev' : ''} ${index > 0 ? 'stacked' : ''}`} 
+                  src={getCardImage(card.name_short)} 
+                  alt={card.name} 
+                  style={{ transform: `rotate(${card.rotation}deg)` }}
                 />
               ))
             ) : (
@@ -176,6 +182,7 @@ function App() {
             { label: 'Image', source: 'Daily Tarot Draw', link: 'https://www.dailytarotdraw.com/#gsc.tab=0' },
             { label: 'API', source: 'Tarot API', link: 'https://tarotapi.dev/' },
             { label: 'AI', source: 'Groq', link: 'https://groq.com/' },
+            { label: 'Github', source: 'NsamaX', link: 'https://github.com/NsamaX/Astral-Oracle' },
           ].map(({ label, source, link }) => (
             <div className='source-item' key={label}>
               <p>{label}</p>

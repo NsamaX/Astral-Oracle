@@ -214,7 +214,7 @@ function App() {
                 type='text'
                 value={userInput}
                 onChange={e => setUserInput(e.target.value)}
-                placeholder='Type your question here...'
+                placeholder='What is on your mind, dear seeker?'
               />
               <div className='icon-lightbul-on' onClick={() => { 
                   fetchGroqAI();
@@ -225,7 +225,7 @@ function App() {
             </div>
           )}
           
-          {loading && <p>Loading response from Groq...</p>}
+          {loading && <p>The oracle is connecting with the cosmic energies...</p>}
           {groqResponse && <p>{groqResponse}</p>}
         </section>
       </main>

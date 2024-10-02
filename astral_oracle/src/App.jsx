@@ -56,7 +56,8 @@ function App() {
         date: new Date().toLocaleDateString(),
         time: new Date().toLocaleTimeString(),
         card: cardData.name,
-        image: cardData.image
+        image: cardData.image,
+        orientation: cardData.isReversed ? 'Reversed' : 'Normal',
       });
       setCookie('cardHistory', JSON.stringify(history), 365);
     }

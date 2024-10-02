@@ -32,7 +32,7 @@ const HistorySidebar = ({ showHistory, onClose }) => {
           <div key={index} className='history-container'>
             <div className='history'>
               <div className='card'>
-                <img src={entry.image || image_icon} alt="card" />
+                <img src={entry.image || image_icon} alt="card" style={{ transform: entry.orientation === 'Reversed' ? 'scale(-1)' : '' }} />
               </div>
               <div className='card-info'>
                 <p>Date: {entry.date}</p>

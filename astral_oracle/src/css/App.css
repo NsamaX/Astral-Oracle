@@ -54,6 +54,10 @@
     max-width: 230px;
 }
 
+.card-image.rev {
+    transform: rotate(180deg);
+}
+
 .draw-cards {
     display: flex;
     gap: 16px;
@@ -76,6 +80,9 @@
 }
 
 .right-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     flex: 1;
     padding: 0 120px;
     gap: 30px;
@@ -83,13 +90,16 @@
 
 .right-side h2 {
     text-align: center;
+    width: 100%;
 }
 
-/* .input-container {
-    display: flex;
-    align-items: center;
+.right-side p {
+    text-align: left;
     width: 100%;
-} */
+    margin: 0;
+}
+
+
 .input-container {
     display: flex;
     align-items: center;

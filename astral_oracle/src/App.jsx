@@ -16,8 +16,12 @@ function App() {
     try {
       const response = await fetch(`https://tarotapi.dev/api/v1/cards/random?n=${numCards}`);
       const data = await response.json();
-      console.log(data);
-      setCards(data.cards);
+      const cardsWithOrientation = data.cards.map(card => {
+        const isReversed = Math.random() > 0.5;
+        return { ...card, isReversed };
+      });
+      console.log(cardsWithOrientation);
+      setCards(cardsWithOrientation);
     } catch (error) {
       console.error('Error fetching cards:', error);
     } finally {
@@ -38,9 +42,18 @@ function App() {
 
       <main className='body'>
         <section className='left-side'>
-          <img className='card-image' src={image_icon} alt="card image" />
+          {cards.length > 0 && cards[0] ? (
+            <img 
+              className={`card-image ${cards[0].isReversed ? 'rev' : ''}`} 
+              src={image_icon} 
+              alt="card image" 
+            />
+          ) : (
+            <img className='card-image' src={image_icon} alt="card image" />
+          )}
+          
           {cards.length === 0 && !loading && (
-            <h3>Please pick up the card.</h3>
+            <h3>Please pick a card.</h3>
           )}
           {loading ? (
             <h3>Loading...</h3>
@@ -49,6 +62,7 @@ function App() {
               <h3>{cards[0].name}</h3>
             )
           )}
+
           <div className='draw-cards'>
             {[1, 3, 5].map(num => (
               <button 
@@ -73,12 +87,12 @@ function App() {
           ) : (
             cards.length > 0 && cards[0] && (
               <>
-                <p><strong>Upright Meaning:</strong> {cards[0].meaning_up}</p>
-                <p><strong>Reversed Meaning:</strong> {cards[0].meaning_rev}</p>
+                <p><strong>Upright Meaning:</strong> {cards[0].isReversed ? cards[0].meaning_rev : cards[0].meaning_up}</p>
                 <p><strong>Description:</strong> {cards[0].desc}</p>
               </>
             )
           )}
+          
           <div className='input-container'>
             <input
               className='ask-the-oracle'

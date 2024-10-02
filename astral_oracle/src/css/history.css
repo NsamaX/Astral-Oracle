@@ -45,11 +45,6 @@
     overflow: hidden; 
 }
 
-.card:hover img {
-    transform: scale(0.8);
-    transition: transform 0.2s ease;
-}
-
 .card img {
     width: 100%; 
     height: auto; 

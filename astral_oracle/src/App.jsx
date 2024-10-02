@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Groq from 'groq-sdk';
+import Cookies from 'js-cookie';
 import cardData from './card_data.json';
 import image_icon from './assets/card.png';
 import icon_history from './assets/icon_history.png';
@@ -37,8 +38,8 @@ function App() {
 
   const handleCookieDecline = () => {
     setShowCookieConsent(false);
-    Cookies.remove('cookieConsent');
     Cookies.remove('cardHistory');
+    Cookies.remove('cookieConsent');
   };  
 
   const handleCookieAccept = () => {
@@ -77,12 +78,7 @@ function App() {
       console.log(cardsWithOrientation);
   
       cardsWithOrientation.forEach(card => {
-        const cardData = {
-          date: new Date().toLocaleDateString(),
-          time: new Date().toLocaleTimeString(),
-          card: card.name,
-        };
-        saveCardToHistory(cardData);
+        saveCardToHistory(card);
       });
   
       setGroqResponse('');

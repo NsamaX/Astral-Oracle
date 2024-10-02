@@ -21,19 +21,9 @@ function App() {
   const [groqResponse, setGroqResponse] = useState('');
 
   useEffect(() => {
-    document.title = "Astral Oracle";
-    const link = document.createElement('link');
-    link.rel = 'icon';
-    link.href = icon_cards;
-    document.head.appendChild(link);
-
     const consent = localStorage.getItem('cookieConsent');
     if (!consent) {
       setShowCookieConsent(true);
-    }
-
-    return () => {
-      document.head.removeChild(link);
     }
   }, []);
 

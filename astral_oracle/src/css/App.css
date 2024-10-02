@@ -52,18 +52,52 @@
 
 .card-container {
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    height: 370px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .card-image {
+    position: absolute;
     max-width: 230px;
+    opacity: 0;
     transition: transform 0.4s;
 }
 
 .card-image.stacked {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    z-index: 1;
+}
+
+.card-image:nth-child(1) {
+    transform: translateY(0) rotate(0deg);
+    animation: fadeIn 0.4s forwards;
+}
+.card-image:nth-child(2) {
+    transform: translateY(-10px) rotate(-5deg);
+    animation: fadeIn 0.6s forwards;/
+}
+.card-image:nth-child(3) {
+    transform: translateY(-20px) rotate(5deg);
+    animation: fadeIn 0.8s forwards;
+}
+.card-image:nth-child(4) {
+    transform: translateY(-30px) rotate(-3deg);
+    animation: fadeIn 1s forwards;
+}
+.card-image:nth-child(5) {
+    transform: translateY(-40px) rotate(3deg);
+    animation: fadeIn 1.2s forwards;
 }
 
 .card-image.rev {
@@ -110,7 +144,6 @@
     width: 100%;
     margin: 0;
 }
-
 
 .input-container {
     display: flex;

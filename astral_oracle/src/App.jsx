@@ -14,18 +14,19 @@ function App() {
   const fetchCards = async (numCards) => {
     setLoading(true);
     try {
-      const response = await fetch(`https://tarotapi.dev/api/v1/cards/random?n=${numCards}`);
-      const data = await response.json();
-      const cardsWithOrientation = data.cards.map(card => {
-        const isReversed = Math.random() > 0.5;
-        return { ...card, isReversed };
-      });
-      console.log(cardsWithOrientation);
-      setCards(cardsWithOrientation);
+        const response = await fetch(`https://tarotapi.dev/api/v1/cards/random?n=${numCards}`);
+        const data = await response.json();
+        const cardsWithOrientation = data.cards.map((card, index) => {
+            const isReversed = Math.random() > 0.5;
+            const randomRotation = index > 0 ? Math.floor(Math.random() * 20) - 5 : 0;
+            return { ...card, isReversed, rotation: randomRotation };
+        });
+        console.log(cardsWithOrientation);
+        setCards(cardsWithOrientation);
     } catch (error) {
-      console.error('Error fetching cards:', error);
+        console.error('Error fetching cards:', error);
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
   };
 
@@ -42,15 +43,21 @@ function App() {
 
       <main className='body'>
         <section className='left-side'>
-          {cards.length > 0 && cards[0] ? (
-            <img 
-              className={`card-image ${cards[0].isReversed ? 'rev' : ''}`} 
-              src={image_icon} 
-              alt="card image" 
-            />
-          ) : (
-            <img className='card-image' src={image_icon} alt="card image" />
-          )}
+          <div className="card-container">
+            {cards.length > 0 && cards[0] ? (
+              cards.map((card, index) => (
+                <img 
+                    key={index}
+                    className={`card-image ${card.isReversed ? 'rev' : ''} ${index > 0 ? 'stacked' : ''}`} 
+                    src={image_icon} 
+                    alt="card image" 
+                    style={{ transform: `rotate(${card.rotation}deg)` }}
+                />
+              ))
+            ) : (
+              <img className='card-image' src={image_icon} alt="card image" />
+            )}
+          </div>
           
           {cards.length === 0 && !loading && (
             <h3>Please pick a card.</h3>

@@ -195,11 +195,7 @@ function App() {
               <>
                 {cards.map((card, index) => (
                   <div key={index}>
-                    {prevCards.name === card.name ? (
-                      <h3>{card.name}</h3>
-                    ) : (  
-                      <p><strong>Name:</strong> {card.name}</p>
-                    )}
+                    <p><strong>Name:</strong> {card.name}</p>
                     <p>
                       <strong>{card.isReversed ? 'Reversed' : 'Upright'} Meaning:</strong> 
                       {card.isReversed ? card.meaning_rev : card.meaning_up}

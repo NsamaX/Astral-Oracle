@@ -8,6 +8,22 @@ import './css/App.css';
 function App() {
   const [showHistory, setShowHistory] = useState(false); 
   const [userInput, setUserInput] = useState('');
+  const [cards, setCards] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchCards = async (numCards) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`https://tarotapi.dev/api/v1/cards/random?n=${numCards}`);
+      const data = await response.json();
+      console.log(data);
+      setCards(data.cards);
+    } catch (error) {
+      console.error('Error fetching cards:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -23,20 +39,46 @@ function App() {
       <main className='body'>
         <section className='left-side'>
           <img className='card-image' src={image_icon} alt="card image" />
-          <h3>Please pick up the card.</h3>
+          {cards.length === 0 && !loading && (
+            <h3>Please pick up the card.</h3>
+          )}
+          {loading ? (
+            <h3>Loading...</h3>
+          ) : (
+            cards.length > 0 && (
+              <h3>{cards[0].name}</h3>
+            )
+          )}
           <div className='draw-cards'>
             {[1, 3, 5].map(num => (
-              <button key={num} className='draw-button'>{num} Card{num > 1 ? 's' : ''}</button>
+              <button 
+                key={num} 
+                className='draw-button' 
+                onClick={() => fetchCards(num)}
+              >
+                {num} Card{num > 1 ? 's' : ''}
+              </button>
             ))}
           </div>
         </section>
         
         <section className='right-side'>
-          <h2>Welcome to Astral Oracle</h2>
-          <p>Discover cosmic insights and wisdom hidden within the stars. Astral Oracle is your gateway to daily tarot readings, offering profound guidance on love, career, and personal growth. Connect with the universe and unveil deeper meanings behind life events.</p>
-          <p>Pick a card, or explore multi-card spreads to dive deeper into the mysteries shaping your path. Whether it's a single card or a five-card reading, we deliver personalized messages to illuminate your journey.</p>
-          <p>Embrace the power of the tarot and let the stars guide you toward the answers you seek. Gain clarity, insight, and confidence to face the future.</p>
-
+          {cards.length === 0 && !loading ? (
+            <>
+              <h2>Welcome to Astral Oracle</h2>
+              <p>Discover cosmic insights and wisdom hidden within the stars. Astral Oracle is your gateway to daily tarot readings, offering profound guidance on love, career, and personal growth. Connect with the universe and unveil deeper meanings behind life events.</p>
+              <p>Pick a card, or explore multi-card spreads to dive deeper into the mysteries shaping your path. Whether it's a single card or a five-card reading, we deliver personalized messages to illuminate your journey.</p>
+              <p>Embrace the power of the tarot and let the stars guide you toward the answers you seek. Gain clarity, insight, and confidence to face the future.</p>
+            </>
+          ) : (
+            cards.length > 0 && cards[0] && (
+              <>
+                <p><strong>Upright Meaning:</strong> {cards[0].meaning_up}</p>
+                <p><strong>Reversed Meaning:</strong> {cards[0].meaning_rev}</p>
+                <p><strong>Description:</strong> {cards[0].desc}</p>
+              </>
+            )
+          )}
           <div className='input-container'>
             <input
               className='ask-the-oracle'
@@ -57,7 +99,7 @@ function App() {
         {[
           { label: 'Image', source: 'Daily Tarot Draw', link: 'https://www.dailytarotdraw.com/#gsc.tab=0' },
           { label: 'API', source: 'Tarot API', link: 'https://tarotapi.dev/' },
-          { label: 'AI', source: 'Groq AI', link: 'https://groq.com/' },
+          { label: 'AI', source: 'Groq', link: 'https://groq.com/' },
         ].map(({ label, source, link }) => (
           <div className='source-item' key={label}>
             <p>{label}</p>

@@ -1,35 +1,75 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Groq from 'groq-sdk';
 import image_icon from './assets/card.png';
 import icon_history from './assets/icon_history.png';
 import icon_lightbul_on from './assets/icon_lightbul_on.png';
 import HistorySidebar from './component/history';
 import './css/App.css';
 
+const apiKey = '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';
+const groq = new Groq({ apiKey: apiKey, dangerouslyAllowBrowser: true });
+
 function App() {
   const [showHistory, setShowHistory] = useState(false); 
   const [userInput, setUserInput] = useState('');
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [groqResponse, setGroqResponse] = useState('');
 
   const fetchCards = async (numCards) => {
     setLoading(true);
     try {
-        const response = await fetch(`https://tarotapi.dev/api/v1/cards/random?n=${numCards}`);
-        const data = await response.json();
-        const cardsWithOrientation = data.cards.map((card, index) => {
-            const isReversed = Math.random() > 0.5;
-            const randomRotation = index > 0 ? Math.floor(Math.random() * 20) - 5 : 0;
-            return { ...card, isReversed, rotation: randomRotation };
-        });
-        console.log(cardsWithOrientation);
-        setCards(cardsWithOrientation);
+      const response = await fetch(`https://tarotapi.dev/api/v1/cards/random?n=${numCards}`);
+      const data = await response.json();
+      const cardsWithOrientation = data.cards.map((card, index) => {
+        const isReversed = Math.random() > 0.5;
+        const randomRotation = index > 0 ? Math.floor(Math.random() * 20) - 5 : 0;
+        return { ...card, isReversed, rotation: randomRotation };
+      });
+      
+      console.log(cardsWithOrientation);
+      setCards(cardsWithOrientation);
+  
+      setGroqResponse('');
     } catch (error) {
-        console.error('Error fetching cards:', error);
+      console.error('Error fetching cards:', error);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
-
+  
+  const fetchGroqAI = async () => {
+    if (!userInput || cards.length === 0) return; 
+    setLoading(true);
+  
+    const drawnCards = cards.map(card => `${card.name} (${card.isReversed ? 'Reversed' : 'Upright'})`).join(', ');
+  
+    try {
+      const completion = await groq.chat.completions.create({
+        messages: [
+          {
+            role: "system",
+            content: "You are a Tarot reader providing concise and insightful predictions based on Tarot cards. Respond directly to the user's question without unnecessary introductions or disclaimers. Answer in English.",
+          },
+          {
+            role: "user",
+            content: `I have drawn the following cards: ${drawnCards}. My question is: ${userInput}`,
+          },
+        ],
+        model: "mixtral-8x7b-32768",
+      });
+  
+      const rawResponse = completion.choices[0]?.message?.content || "";
+      const filteredResponse = rawResponse.split('\n').filter(line => line.trim() !== '').join(' '); // Combine non-empty lines
+  
+      setGroqResponse(filteredResponse);
+    } catch (error) {
+      console.error('Error fetching from Groq AI:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   return (
     <>
       <header className='header'>
@@ -96,6 +136,7 @@ function App() {
               <>
                 {cards.map((card, index) => (
                   <div key={index}>
+                    <p><strong>Name:</strong> {card.name}</p>
                     <p>
                       <strong>{card.isReversed ? 'Reversed' : 'Upright'} Meaning:</strong> {card.isReversed ? card.meaning_rev : card.meaning_up}
                     </p>
@@ -106,33 +147,41 @@ function App() {
             )
           )}
           
-          <div className='input-container'>
-            <input
-              className='ask-the-oracle'
-              type='text'
-              value={userInput}
-              onChange={e => setUserInput(e.target.value)}
-              placeholder='Type your question here...'
-            />
-            <div className='icon-lightbul-on' onClick={() => { console.log("User input:", userInput); setUserInput(''); }}>
-              <img src={icon_lightbul_on} alt="Ask" />
+          {cards.length > 0 && (
+            <div className='input-container'>
+              <input
+                className='ask-the-oracle'
+                type='text'
+                value={userInput}
+                onChange={e => setUserInput(e.target.value)}
+                placeholder='Type your question here...'
+              />
+              <div className='icon-lightbul-on' onClick={() => { 
+                  fetchGroqAI();
+                  setUserInput(''); 
+              }}>
+                <img src={icon_lightbul_on} alt="Ask" />
+              </div>
             </div>
-          </div>
+          )}
+          
+          {loading && <p>Loading response from Groq...</p>}
+          {groqResponse && <p>{groqResponse}</p>}
         </section>
       </main>
 
       <footer className='footer'>
         <div className='source'>
-        {[
-          { label: 'Image', source: 'Daily Tarot Draw', link: 'https://www.dailytarotdraw.com/#gsc.tab=0' },
-          { label: 'API', source: 'Tarot API', link: 'https://tarotapi.dev/' },
-          { label: 'AI', source: 'Groq', link: 'https://groq.com/' },
-        ].map(({ label, source, link }) => (
-          <div className='source-item' key={label}>
-            <p>{label}</p>
-            <a href={link}>{source}</a>
-          </div>
-        ))}
+          {[
+            { label: 'Image', source: 'Daily Tarot Draw', link: 'https://www.dailytarotdraw.com/#gsc.tab=0' },
+            { label: 'API', source: 'Tarot API', link: 'https://tarotapi.dev/' },
+            { label: 'AI', source: 'Groq', link: 'https://groq.com/' },
+          ].map(({ label, source, link }) => (
+            <div className='source-item' key={label}>
+              <p>{label}</p>
+              <a href={link} target="_blank" rel="noopener noreferrer">{source}</a>
+            </div>
+          ))}
         </div>
       </footer>
     </>

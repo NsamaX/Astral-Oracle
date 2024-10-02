@@ -26,24 +26,38 @@ function App() {
     }
   }, []);
 
+  const setCookie = (name, value, days) => {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+  };
+  
+  const getCookie = (name) => {
+    return document.cookie.split('; ').reduce((r, v) => {
+      const parts = v.split('=');
+      return parts[0] === name ? decodeURIComponent(parts[1]) : r;
+    }, '');
+  };  
+
   const handleCookieDecline = () => {
     setShowCookieConsent(false);
+    setCookie('cookieConsent', 'false', 365);
   };
 
   const handleCookieAccept = () => {
     localStorage.setItem('cookieConsent', 'true');
     setShowCookieConsent(false);
+    setCookie('cookieConsent', 'true', 365);
   };
 
   const saveCardToHistory = (cardData) => {
-    const consent = localStorage.getItem('cookieConsent');
+    const consent = getCookie('cookieConsent');
     if (consent === 'true') {
-      let history = JSON.parse(localStorage.getItem('cardHistory')) || [];
+      let history = JSON.parse(getCookie('cardHistory') || '[]');
       history.push(cardData);
-      localStorage.setItem('cardHistory', JSON.stringify(history));
+      setCookie('cardHistory', JSON.stringify(history), 365);
     }
   };
-
+  
   const fetchCards = async (numCards) => {
     setLoading(true);
     try {

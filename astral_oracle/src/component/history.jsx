@@ -22,12 +22,6 @@ const HistorySidebar = ({ showHistory, onClose }) => {
     return history ? JSON.parse(history) : [];
   };
 
-  const saveCardToHistory = (cardData) => {
-    const history = getCardHistory();
-    history.push(cardData);
-    Cookies.set('cardHistory', JSON.stringify(history), { expires: 7 });
-  };
-
   const cardHistory = getCardHistory();
   
   return (

@@ -43,7 +43,18 @@ function App() {
     const cardInfo = cardData.cards.find(card => card.name_short === nameShort); 
     return cardInfo ? cardInfo.image : image_icon; 
   };
-  
+
+  const handleCardClick = () => {
+    setCards(prevCards => {
+      if (prevCards.length > 0) {
+        const firstCard = prevCards[0];
+        const newCards = prevCards.slice(1); 
+        return [...newCards, firstCard];
+      }
+      return prevCards;
+    });
+  };
+
   const fetchGroqAI = async () => {
     if (!userInput || cards.length === 0) return; 
     setLoading(true);
@@ -66,7 +77,7 @@ function App() {
       });
   
       const rawResponse = completion.choices[0]?.message?.content || "";
-      const filteredResponse = rawResponse.split('\n').filter(line => line.trim() !== '').join(' '); // Combine non-empty lines
+      const filteredResponse = rawResponse.split('\n').filter(line => line.trim() !== '').join(' ');
   
       setGroqResponse(filteredResponse);
     } catch (error) {
@@ -98,6 +109,7 @@ function App() {
                   src={getCardImage(card.name_short)} 
                   alt={card.name} 
                   style={{ transform: `rotate(${card.rotation}deg)` }}
+                  onClick={handleCardClick}
                 />
               ))
             ) : (

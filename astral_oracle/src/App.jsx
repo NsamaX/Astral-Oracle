@@ -174,7 +174,7 @@ function App() {
   return (
     <>
       <header className='header'>
-        <h1>Astral Oracle</h1>
+        <h1 translate='no'>Astral Oracle</h1>
         <div className='icon-history' onClick={() => setShowHistory(prev => !prev)}>
           <img src={icon_history} alt="History Icon" />
         </div>
@@ -330,7 +330,7 @@ function App() {
           ].map(({ label, source, link }) => (
             <div className='source-item' key={label}>
               <p>{label}</p>
-              <a href={link} target="_blank" rel="noopener noreferrer">{source}</a>
+              <a translate='no' href={link} target="_blank" rel="noopener noreferrer">{source}</a>
             </div>
           ))}
         </div>

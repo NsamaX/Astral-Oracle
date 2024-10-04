@@ -286,9 +286,9 @@ function App() {
               cards.map((card, index) => (
                 <div key={index}>
                   {prevCards.length > 0 && prevCards[0].name === card.name ? (
-                      <h3 className='choosen-card'>
-                        Choosen card: {card.name}
-                      </h3>
+                      <h1 className='choosen-card'>
+                        {card.name}
+                      </h1>
                     ) : <p>{card.name}</p>
                   }
                   <p>

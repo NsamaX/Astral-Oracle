@@ -1,28 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import Groq from 'groq-sdk';
-import Cookies from 'js-cookie';
 import cardData from './card_data.json';
 import image_icon from './assets/card.png';
 import icon_history from './assets/icon_history.png';
 import icon_lightbul_on from './assets/icon_lightbul_on.png';
-import HistorySidebar from './component/history';
+import Cookies from 'js-cookie';
 import CookieConsent from './component/cookie';
+import HistorySidebar from './component/history';
 import './css/App.css';
 
 const apiKey = import.meta.env.VITE_GROQ_API_KEY;
 const groq = new Groq({ apiKey: apiKey, dangerouslyAllowBrowser: true });
 
 function App() {
-  const [showCookieConsent, setShowCookieConsent] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
   const [cards, setCards] = useState([]);
-  const [loading, setLoading] = useState(false); 
+  const [prevCards, setPrevCards] = useState([]);
   const [userInput, setUserInput] = useState('');
   const [groqResponse, setGroqResponse] = useState('');
+  const [showCookieConsent, setShowCookieConsent] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [loading, setLoading] = useState(false); 
+  const [dots, setDots] = useState('');
 
   useEffect(() => {
     setShowCookieConsent(true); 
   }, []);
+
+  useEffect(() => {
+    let interval;
+    if (loading) {
+      interval = setInterval(() => {
+        setDots(prev => (prev.length < 3 ? prev + '.' : ''));
+      }, 800);
+    }
+
+    return () => clearInterval(interval);
+  }, [loading]);
 
   const setCookie = (name, value, days) => {
     const expires = new Date(Date.now() + days * 864e5).toUTCString();
@@ -65,6 +78,7 @@ function App() {
   
   const fetchCards = async (numCards) => {
     setLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 3000));
     try {
       const response = await fetch(`https://tarotapi.dev/api/v1/cards/random?n=${numCards}`);
       const data = await response.json();
@@ -76,6 +90,7 @@ function App() {
       });
   
       setCards(cardsWithOrientation);
+      setPrevCards([cardsWithOrientation[0]]);
       console.log(cardsWithOrientation);
   
       cardsWithOrientation.forEach(card => {
@@ -100,6 +115,7 @@ function App() {
       if (prevCards.length > 0) {
         const firstCard = prevCards[0];
         const newCards = prevCards.slice(1); 
+        setPrevCards(newCards);
         return [...newCards, firstCard];
       }
       return prevCards;
@@ -180,7 +196,7 @@ function App() {
             <h3>Please pick a card.</h3>
           )}
           {loading ? (
-            <h3>Shuffling cards...</h3>
+            <h3>Shuffling cards{dots}</h3>
           ) : (
             cards.length > 0 && (
               <h3>{cards[0].name}</h3>
@@ -220,35 +236,66 @@ function App() {
             </div>
           )}
           
-          {loading && <p>The oracle is connecting with the cosmic energies...</p>}
-          {groqResponse && <p>{groqResponse}</p>}
+          <div className='oracle-answer'>
+            {loading && 
+              <p>
+                🌌✨ The oracle weaves destiny's threads, connecting with cosmic energies... 🌠 
+                Prepare for celestial guidance from the stars! 
+              </p>
+            }
+            {groqResponse && <p>{groqResponse}</p>}
+          </div>
         </section>
         
         <section className='right-side'>
           {cards.length === 0 && !loading ? (
             <>
-              <h2>✨Greetings Traveler!✨</h2>
               {showCookieConsent && (
-                <CookieConsent 
-                  onAccept={handleCookieAccept} 
-                  onDecline={handleCookieDecline} 
-                />
+                <>
+                  {(getCookie('cookieConsent') === 'true') ? (
+                    <h2>🌟Welcome back!🌟</h2>
+                  ) : (
+                    <h2>✨Greetings Traveler!✨</h2>
+                  )}
+                  <CookieConsent 
+                    hasCookie={getCookie('cookieConsent') === 'true'}
+                    onAccept={handleCookieAccept} 
+                    onDecline={handleCookieDecline} 
+                  />
+                </>
               )}
               
-              <p>Discover cosmic insights and wisdom hidden within the stars. Astral Oracle is your gateway to daily tarot readings, offering profound guidance on love, career, and personal growth. Connect with the universe and unveil deeper meanings behind life events.</p>
-              <p>Pick a card, or explore multi-card spreads to dive deeper into the mysteries shaping your path. Whether it's a single card or a five-card reading, we deliver personalized messages to illuminate your journey.</p>
-              <p>Embrace the power of the tarot and let the stars guide you toward the answers you seek. Gain clarity, insight, and confidence to face the future.</p>
+              <p>
+                ✨✨ Step into the celestial realm where cosmic insights and ancient wisdom await! 
+                The Astral Oracle serves as your mystical gateway to daily tarot readings, 
+                weaving profound tales of love, destiny, and personal growth amidst the stardust. 
+                🌌 Connect with the universe and unveil the deeper meanings hidden in the tapestry of life events.
+              </p>
+              <p>
+                🌠 Choose a card, or embark on a journey through multi-card spreads to delve into the mysteries 
+                shaping your cosmic path. Whether you seek clarity from a single card or the wisdom of a five-card spread, 
+                we offer personalized messages to illuminate your sacred journey. 
+              </p>
+              <p>
+                Embrace the enchanting power of the tarot, and let the stars guide you to the answers you seek. 
+                🌟 Gain clarity, insight, and the courage to face the unfolding chapters of your destiny! 
+              </p>
             </>
           ) : (
             cards.length > 0 && (
               cards.map((card, index) => (
                 <div key={index}>
-                  <p><strong>Name:</strong> {card.name}</p>
+                  {prevCards.length > 0 && prevCards[0].name === card.name ? (
+                      <h3 className='choosen-card'>
+                        Choosen card: {card.name}
+                      </h3>
+                    ) : <p>{card.name}</p>
+                  }
                   <p>
-                    <strong>{card.isReversed ? 'Reversed' : 'Upright'} Meaning: </strong> 
+                    {card.isReversed ? 'Reversed' : 'Upright'} Meaning:  
                     {card.isReversed ? card.meaning_rev : card.meaning_up}
                   </p>
-                  <p><strong>Description:</strong> {card.desc}</p>
+                  <p>Description: {card.desc}</p>
                 </div>
               ))
             )

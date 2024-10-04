@@ -39,6 +39,10 @@
     width: 80%;
 }
 
+.history-sidebar p {
+    padding: 0 30px;
+}
+
 .card {
     min-width: 60px;
     max-width: 60px;
@@ -55,7 +59,7 @@
     padding-left: 10px;
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 600px) {
     .history-sidebar {
         right: -320px;
         width: 320px;

@@ -34,7 +34,7 @@
 
 .body {
     display: flex;
-    justify-content: space-between;
+    justify-content: start;
     margin: 0 160px;
     min-height: calc(100vh - 160px);
 }
@@ -178,6 +178,10 @@
     width: 100%;
 }
 
+.choosen-card {
+    color: #BE97CC;
+}
+
 .footer {
     margin-top: auto;
     padding: 30px 0;
@@ -219,6 +223,14 @@
         margin: 0 90px;
     }
 
+    .icon-lightbul-on {
+        padding-right: 10%;
+    }
+
+    .oracle-answer {
+        margin: 0 90px;
+    }
+
     .right-side {
         margin: 0 90px;
     }
@@ -234,6 +246,14 @@
     .ask-the-oracle {
         margin: 0 60px;
     }
+    
+    .icon-lightbul-on {
+        padding-right: 76px;
+    }
+
+    .oracle-answer {
+        margin: 0 60px;
+    }
 
     .right-side {
         margin: 0 60px;
@@ -243,6 +263,14 @@
 @media (max-width: 600px) {
     .ask-the-oracle {
         margin: 0 26px;
+    }
+    
+    .icon-lightbul-on {
+        padding-right: 36px;
+    }
+
+    .oracle-answer {
+        margin: 0 30px;
     }
 
     .right-side {

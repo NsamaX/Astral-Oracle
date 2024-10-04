@@ -26,7 +26,7 @@ const HistorySidebar = ({ showHistory, onClose }) => {
   
   return (
     <div ref={sidebarRef} className={`history-sidebar ${showHistory ? 'show' : ''}`}>
-      <h1>History</h1>
+      <h1>Chronicles</h1>
       {cardHistory.length > 0 ? (
         cardHistory.map((entry, index) => (
           <div key={index} className='history-container'>
@@ -44,7 +44,11 @@ const HistorySidebar = ({ showHistory, onClose }) => {
           </div>
         ))
       ) : (
-        <p>No history available.</p>
+        <p>
+          🌌✨ Alas, it seems the cosmic winds have whispered of no tales from the past. 
+          Your journey is still unwritten, a blank canvas awaiting the brushstrokes of fate. 
+          📜 Embrace this moment of possibility, for every card drawn may unveil new adventures and hidden stories! 
+        </p>
       )}
       <br />
     </div>

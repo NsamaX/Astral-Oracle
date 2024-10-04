@@ -17,6 +17,7 @@ function App() {
   const [prevCards, setPrevCards] = useState([]);
   const [userInput, setUserInput] = useState('');
   const [groqResponse, setGroqResponse] = useState('');
+  const [displayedResponse, setDisplayedResponse] = useState('');
   const [showCookieConsent, setShowCookieConsent] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [loading, setLoading] = useState(false); 
@@ -36,6 +37,22 @@ function App() {
 
     return () => clearInterval(interval);
   }, [loading]);
+
+  useEffect(() => {
+    if (groqResponse) {
+      setDisplayedResponse('');
+      let index = 0;
+
+      const interval = setInterval(() => {
+        if (index < groqResponse.length) {
+          setDisplayedResponse(prev => prev + groqResponse[index]);
+          index++;
+        } else {
+          clearInterval(interval); 
+        }
+      }, 30);
+    }
+  }, [groqResponse]);
 
   const setCookie = (name, value, days) => {
     const expires = new Date(Date.now() + days * 864e5).toUTCString();
@@ -243,7 +260,7 @@ function App() {
                 Prepare for celestial guidance from the stars! 
               </p>
             }
-            {groqResponse && <p>{groqResponse}</p>}
+            {displayedResponse && <p>{displayedResponse}</p>}
           </div>
         </section>
         

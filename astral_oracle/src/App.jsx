@@ -82,7 +82,7 @@ function App() {
     const consent = getCookie('cookieConsent');
     if (consent === 'true') {
       let history = JSON.parse(getCookie('cardHistory') || '[]');
-      history.push({
+      history.unshift({
         date: new Date().toLocaleDateString(),
         time: new Date().toLocaleTimeString(),
         card: cardData.name,
@@ -91,7 +91,7 @@ function App() {
       });
       setCookie('cardHistory', JSON.stringify(history), 365);
     }
-  };
+  };  
   
   const fetchCards = async (numCards) => {
     setLoading(true);
@@ -256,7 +256,7 @@ function App() {
           <div className='oracle-answer'>
             {loading && 
               <p>
-                🌌✨ The oracle weaves destiny's threads, connecting with cosmic energies... 🌠 
+                🌌 The oracle weaves destiny's threads, connecting with cosmic energies... 🌠 
                 Prepare for celestial guidance from the stars! 
               </p>
             }
@@ -283,7 +283,7 @@ function App() {
               )}
               
               <p>
-                ✨✨ Step into the celestial realm where cosmic insights and ancient wisdom await! 
+                ✨ Step into the celestial realm where cosmic insights and ancient wisdom await! 
                 The Astral Oracle serves as your mystical gateway to daily tarot readings, 
                 weaving profound tales of love, destiny, and personal growth amidst the stardust. 
                 🌌 Connect with the universe and unveil the deeper meanings hidden in the tapestry of life events.

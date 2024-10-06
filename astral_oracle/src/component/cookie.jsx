@@ -8,11 +8,11 @@ const CookieConsent = ({ hasCookie, onAccept, onDecline }) => {
         <p>
           Should you wish to leave the shadows of yore behind, simply summon the 'Decline' spell. 
           ✨ Our magical cookies, crafted from the essence of starlight, await you! 
-          Click 'Accept' to revel in these delightful treasures and unlock wonders untold! 🍪🌌
+          Click 'Accept' to revel in these delightful treasures and unlock wonders untold! 🍪
         </p> : <p>
           Should you choose to cast away the shadows of yore, simply summon the 'Decline' spell. 🌌 
           Remember, our enchanted cookies are crafted from stardust and bring joy to your mystical journey! 
-          🌠 Click 'Accept' to embrace these whimsical treats and unlock a treasure trove of delight! 🍪✨
+          🌠 Click 'Accept' to embrace these whimsical treats and unlock a treasure trove of delight! ✨
         </p>      
       }
       <button onClick={onDecline}><h3>Decline</h3></button>

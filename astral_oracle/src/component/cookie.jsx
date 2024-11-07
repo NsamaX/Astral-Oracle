@@ -1,24 +1,20 @@
+// dependencies
 import React from 'react';
+import i18n from '../assets/i18n'; 
 import '../css/cookie.css';
 
 const CookieConsent = ({ hasCookie, onAccept, onDecline }) => {
   return (
     <div className="cookie-consent">
       {hasCookie ? 
-        <p>
-          Should you wish to leave the shadows of yore behind, simply summon the 'Decline' spell. 
-          ✨ Our magical cookies, crafted from the essence of starlight, await you! 
-          Click 'Accept' to revel in these delightful treasures and unlock wonders untold! 🍪
-        </p> : <p>
-          Should you choose to cast away the shadows of yore, simply summon the 'Decline' spell. 🌌 
-          Remember, our enchanted cookies are crafted from stardust and bring joy to your mystical journey! 
-          🌠 Click 'Accept' to embrace these whimsical treats and unlock a treasure trove of delight! ✨
-        </p>      
+        <p>{i18n.t('cookieNotAccept')}</p> 
+        : <p>{i18n.t('cookieAccepted')}</p>      
       }
-      <button onClick={onDecline}><h3>Decline</h3></button>
-      {hasCookie ? 
-        null 
-        : <button onClick={onAccept}><h3>Accept</h3></button>
+      <button onClick={onDecline}><h3>{i18n.t('decline')}</h3></button>
+      {!hasCookie ? 
+        // ถ้ายังไม่มีคุกกี้จะแสดงปุ่ม Accept
+        <button onClick={onAccept}><h3>{i18n.t('accept')}</h3></button> 
+        : null
       }
     </div>
   );

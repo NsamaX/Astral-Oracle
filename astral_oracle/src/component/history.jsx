@@ -1,11 +1,16 @@
+// dependencies
 import React, { useEffect, useRef } from 'react';
+import i18n from '../assets/i18n'; 
 import Cookies from 'js-cookie';
-import image_icon from '../assets/card.png';
+
+// assets
+import { CardImage } from '../assets/index.js';
 import '../css/history.css';
 
 const HistorySidebar = ({ showHistory, onClose }) => {
   const sidebarRef = useRef(null);
 
+  // ปิด sidebar เมื่อคลิกนอก sidebar
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
@@ -13,42 +18,43 @@ const HistorySidebar = ({ showHistory, onClose }) => {
       }
     };
 
+    // เพิ่ม listener สำหรับคลิก
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [onClose]);
 
+  // ดึงประวัติการ์ดจากคุกกี้
   const getCardHistory = () => {
     const history = Cookies.get('cardHistory');
     return history ? JSON.parse(history) : [];
   };
 
+  // เก็บประวัติการ์ดที่ดึงมาได้
   const cardHistory = getCardHistory();
   
   return (
     <div ref={sidebarRef} className={`history-sidebar ${showHistory ? 'show' : ''}`}>
-      <h1>Chronicles</h1>
+      <h1>{i18n.t('historyTitle')}</h1>
       {cardHistory.length > 0 ? (
+        // แสดงประวัติการ์ดแต่ละรายการ
         cardHistory.map((entry, index) => (
           <div key={index} className='history-container'>
             <div className='history'>
               <div className='card'>
-                <img src={entry.image || image_icon} alt="card" style={{ transform: entry.orientation === 'Reversed' ? 'scale(-1)' : '' }} />
+                <img src={entry.image || CardImage} alt="card" style={{ transform: entry.orientation === 'Reversed' ? 'scale(-1)' : '' }} />
               </div>
               <div className='card-info'>
-                <p>Date: {entry.date}</p>
-                <p>Time: {entry.time}</p>
-                <p>Card: {entry.card}</p>
+                <p>{i18n.t('date')}: {entry.date}</p>
+                <p>{i18n.t('time')}: {entry.time}</p>
+                <p>{i18n.t('card')}: {entry.card}</p>
               </div>
             </div>
             <hr />
           </div>
         ))
       ) : (
-        <p>
-          🌌✨ Alas, it seems the cosmic winds have whispered of no tales from the past. 
-          Your journey is still unwritten, a blank canvas awaiting the brushstrokes of fate. 
-          📜 Embrace this moment of possibility, for every card drawn may unveil new adventures and hidden stories! 
-        </p>
+        // ข้อความแสดงเมื่อไม่มีประวัติการ์ด
+        <p>{i18n.t('history')}</p>
       )}
       <br />
     </div>

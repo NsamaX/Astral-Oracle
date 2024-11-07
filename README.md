@@ -30,7 +30,7 @@
 <pre><code>   git clone https://github.com/NsamaX/Astral-Oracle.git</code></pre>
 
 <pre><code>2. Navigate to the project directory:</code></pre>
-<pre><code>   cd Astral-Oracle</code></pre>
+<pre><code>   cd astral_oracle</code></pre>
 
 <pre><code>3. Install the dependencies:</code></pre>
 <pre><code>   npm install</code></pre>

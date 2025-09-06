@@ -1,0 +1,30 @@
+{
+    "name": "Astral Oracle",
+
+    "pick": "Please pick a card.",
+    "card": "Card",
+    
+    "loading": "Shuffling cards",
+    "prediction": "Making a prediction.",
+    
+    "ask": "What is on your mind, dear seeker?",
+    "oracle": "🌌 The weaves destiny's threads, connecting with cosmic energies... 🌠 Prepare for celestial guidance from the stars!",
+    
+    "welcome": "🌟Welcome back!🌟",
+    "welcomeAgain": "✨Greetings Traveler!✨",
+
+    "cookieNotAccept": "Should you wish to leave the shadows of yore behind, simply summon the 'Decline' spell. ✨ Our magical cookies, crafted from the essence of starlight, await you! Click 'Accept' to revel in these delightful treasures and unlock wonders untold! 🍪",
+    "cookieAccepted": "Should you choose to cast away the shadows of yore, simply summon the 'Decline' spell. 🌌 Remember, our enchanted cookies are crafted from stardust and bring joy to your mystical journey! 🌠 Click 'Accept' to embrace these whimsical treats and unlock a treasure trove of delight! ✨",
+    "decline": "Decline",
+    "accept": "Accept",
+
+    "historyTitle": "Chronicles",
+    "history": "🌌✨ Alas, it seems the cosmic winds have whispered of no tales from the past. Your journey is still unwritten, a blank canvas awaiting the brushstrokes of fate. 📜 Embrace this moment of possibility, for every card drawn may unveil new adventures and hidden stories! ",
+    "date": "Date",
+    "time": "Time",
+
+    "introduce1": "✨ Step into the celestial realm where cosmic insights and ancient wisdom await! The Astral Oracle serves as your mystical gateway to daily tarot readings, weaving profound tales of love, destiny, and personal growth amidst the stardust. 🌌 Connect with the universe and unveil the deeper meanings hidden in the tapestry of life events.",
+    "introduce2": "🌠 Choose a card, or embark on a journey through multi-card spreads to delve into the mysteries shaping your cosmic path. Whether you seek clarity from a single card or the wisdom of a five-card spread, we offer personalized messages to illuminate your sacred journey.",
+    "introduce3": "Embrace the enchanting power of the tarot, and let the stars guide you to the answers you seek. 🌟 Gain clarity, insight, and the courage to face the unfolding chapters of your destiny!"
+}
+  

@@ -1,0 +1,20 @@
+.cookie-consent {
+    text-align: center;
+}
+
+.cookie-consent button {
+    padding: 10px 20px;
+    color: #97C7CC;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.cookie-consent button h3 {
+    color: #97C7CC;
+}
+
+.cookie-consent button h3:hover {
+    color: #BE97CC;
+    transition: color 0.3s ease;
+}

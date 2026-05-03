@@ -279,6 +279,7 @@ function App() {
                 type='text'
                 value={userInput}
                 onChange={e => setUserInput(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter' && userInput) { fetchGroqAI(); setUserInput(''); } }}
                 placeholder={i18n.t('ask')}
                 style={{ paddingRight: userInput ? '46px' : '0' }}
               />

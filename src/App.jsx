@@ -76,32 +76,25 @@ function App() {
     return () => clearInterval(interval);
   }, [loading]);
 
-  // แสดงข้อความจาก groqResponse ทีละตัวอักษร
+  // รีเซ็ตการแสดงผลเมื่อ groqResponse เปลี่ยน
   useEffect(() => {
-    if (groqResponse && typeof groqResponse === 'string') {
-
-      // รีเซ็ตการแสดงผล
-      setDisplayedResponse('');
-      let index = 0;
-
-      // ตั้งเวลาเพื่อแสดงข้อความทีละตัวอักษร
-      const interval = setInterval(() => {
-        if (index < groqResponse.length - 1) {
-          setDisplayedResponse(prev => prev + groqResponse[index]);
-          index++;
-        } else {
-          clearInterval(interval); 
-        }
-      }, 30);
-    }
+    setDisplayedResponse('');
   }, [groqResponse]);
+
+  // แสดงข้อความทีละตัวอักษรโดยใช้ความยาวของ displayedResponse เป็น index
+  useEffect(() => {
+    if (!groqResponse || displayedResponse.length >= groqResponse.length) return;
+    const timeout = setTimeout(() => {
+      setDisplayedResponse(groqResponse.slice(0, displayedResponse.length + 1));
+    }, 10);
+    return () => clearTimeout(timeout);
+  }, [groqResponse, displayedResponse]);
 
   //---------------------------------------- Tarot API ----------------------------------------//
 
   // ดึงข้อมูลการ์ด Tarot
   const fetchCards = async (numCards) => {
     setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 3000));
     try {
 
       // ดึงข้อมูลการ์ดจาก API
@@ -117,7 +110,7 @@ function App() {
       });
 
       // อัพเดทจำนวนการ์ดทั้งหมดที่ถูกเล่นในเว็ปนี้
-      await updateTotalDrawnCards(numCards);
+      updateTotalDrawnCards(numCards);
   
       // ตั้งค่าการ์ดใหม่
       setCards(cardsWithOrientation);
@@ -173,19 +166,16 @@ function App() {
   
     try {
 
-      // กำหนดภาษาสำหรับการตอบสนองของ AI ตามการตั้งค่าภาษาปัจจุบัน
-      const languagePreference = i18n.language === 'en' ? 'English' : 'Thai';
-
       // สร้างคำเตือนสำหรับการตอบสนองของ Groq AI
       const completion = await groq.chat.completions.create({
         messages: [
           {
             role: "system",
-            content: `You are a Tarot reader providing concise and insightful predictions based on Tarot cards.`,
+            content: `You are a mystical tarot reader — wise, calm, and slightly cryptic. Speak as a fortune teller would: use evocative language, metaphors, and a sense of destiny. Keep your reading concise (3–5 sentences). Always respond in the same language the user writes in.`,
           },
           {
             role: "user",
-            content: `I have drawn the following cards: ${drawnCards}. My question is: ${userInput}`,
+            content: `The cards drawn are: ${drawnCards}. My question: ${userInput}`,
           },
         ],
         model: groqModel,
